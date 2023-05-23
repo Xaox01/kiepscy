@@ -1,4 +1,4 @@
-<script>
+
 let data = [
 {
 "season": 1,
@@ -3534,20 +3534,32 @@ let data = [
 
 function getRandomEpisode() {
     const selectedSeason = document.getElementById('season').value;
-    let episodesToChooseFrom = data;
+    let episodesToChooseFrom;
 
-    if (selectedSeason !== 'all') {
-        const selectedSeasonNumber = parseInt(selectedSeason);
-        episodesToChooseFrom = episodesToChooseFrom.filter(episode => episode.season === selectedSeasonNumber);
+    if (selectedSeason === 'all') {
+        episodesToChooseFrom = episodes;
+    } else {
+        const selectedSeasonNumber = parseInt(selectedSeason, 10);
+        episodesToChooseFrom = episodes.filter(episode => episode.season === selectedSeasonNumber);
     }
 
     if (episodesToChooseFrom.length === 0) {
         alert('Nie ma odcinków w tym sezonie.');
         return;
     }
-    
-    const randomEpisode = episodesToChooseFrom[Math.floor(Math.random() * episodesToChooseFrom.length)];
-    document.getElementById('episode').innerHTML = `<p>${randomEpisode.number}. ${randomEpisode.title} <a href="${randomEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a></p>`;
+    const randomIndex = Math.floor(Math.random() * episodesToChooseFrom.length);
+    const episode = episodesToChooseFrom[randomIndex];
+    document.getElementById('episode').innerHTML = `<p>${episode.number}. ${episode.title} <a href="${episode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a></p>`;
 }
 
-</script>
+function searchEpisode() {
+    const searchTerm = document.getElementById('search').value;
+    const foundEpisode = episodes.find(episode => episode.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    if (foundEpisode) {
+        document.getElementById('episode').innerHTML = `<p>${foundEpisode.number}. ${foundEpisode.title} <a href="${foundEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a></p>`;
+    } else {
+        alert('Nie znaleziono odcinka.');
+    }
+}
+

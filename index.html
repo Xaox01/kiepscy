@@ -8,10 +8,39 @@
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
     <div class="w-full fixed top-0 left-0 p-4">
-        <img src="pazdzioch.png" alt="Logo" class="h-20">
+        <img src="pazdzioch.png" alt="Logo" class="h-12">
     </div>
+    <div class="p-6 max-w-sm mx-auto bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
+        <div>
+            <div class="text-xl font-medium text-white">Losowanie odcinków</div>
+            <p class="text-gray-400">Wybierz sezon i losuj odcinek.</p>
+        </div>
+        <div>
+            <label for="season" class="block text-sm font-medium text-gray-400">Wybierz sezon:</label>
+            <select id="season" class="mt-1 block w-full py-2 px-3 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="all">Wszystkie sezony</option>
+                <!-- Dodaj tutaj opcje dla pozostałych sezonów -->
+            </select>
+            <button onclick="getRandomEpisode()" class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Losuj odcinek
+            </button>
+        </div>
+    </div>
+    <div class="p-6 max-w-sm mx-auto bg-gray-800 rounded-xl shadow-md flex items-center space-x-4 mt-4">
+        <div>
+            <div class="text-xl font-medium text-white">Szukaj odcinka</div>
+            <p class="text-gray-400">Wpisz tytuł odcinka.</p>
+        </div>
+        <div>
+            <input id="search" class="mt-1 block w-full py-2 px-3 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" placeholder="Szukaj...">
+            <button onclick="searchEpisode()" class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Szukaj
+            </button>
+        </div>
+    </div>
+    <div id="episode" class="mt-4 text-center text-lg"></div>
     <script>
-        let data = [
+        let episodes = [
         {
         "season": 1,
         "number": 1,
@@ -3546,40 +3575,35 @@
         
         function getRandomEpisode() {
             const selectedSeason = document.getElementById('season').value;
-            let episodesToChooseFrom = data;
+            let episodesToChooseFrom;
         
-            if (selectedSeason !== 'all') {
-                const selectedSeasonNumber = parseInt(selectedSeason);
-                episodesToChooseFrom = episodesToChooseFrom.filter(episode => episode.season === selectedSeasonNumber);
+            if (selectedSeason === 'all') {
+                episodesToChooseFrom = episodes;
+            } else {
+                const selectedSeasonNumber = parseInt(selectedSeason, 10);
+                episodesToChooseFrom = episodes.filter(episode => episode.season === selectedSeasonNumber);
             }
         
             if (episodesToChooseFrom.length === 0) {
                 alert('Nie ma odcinków w tym sezonie.');
                 return;
             }
-            
-            const randomEpisode = episodesToChooseFrom[Math.floor(Math.random() * episodesToChooseFrom.length)];
-            document.getElementById('episode').innerHTML = `<p>${randomEpisode.number}. ${randomEpisode.title} <a href="${randomEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a></p>`;
+            const randomIndex = Math.floor(Math.random() * episodesToChooseFrom.length);
+            const episode = episodesToChooseFrom[randomIndex];
+            document.getElementById('episode').innerHTML = `<p>${episode.number}. ${episode.title} <a href="${episode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a></p>`;
+        }
+        
+        function searchEpisode() {
+            const searchTerm = document.getElementById('search').value;
+            const foundEpisode = episodes.find(episode => episode.title.toLowerCase().includes(searchTerm.toLowerCase()));
+        
+            if (foundEpisode) {
+                document.getElementById('episode').innerHTML = `<p>${foundEpisode.number}. ${foundEpisode.title} <a href="${foundEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a></p>`;
+            } else {
+                alert('Nie znaleziono odcinka.');
+            }
         }
         
         </script>
-    <div class="p-6 max-w-sm mx-auto bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
-        <div>
-            <div class="text-xl font-medium text-white">Losowanie odcinków</div>
-            <p class="text-gray-400">Wybierz sezon i losuj odcinek.</p>
-        </div>
-        <div>
-            <label for="season" class="block text-sm font-medium text-gray-400">Wybierz sezon:</label>
-            <select id="season" class="mt-1 block w-full py-2 px-3 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="all">Wszystkie sezony</option>
-                <!-- Dodaj tutaj opcje dla pozostałych sezonów -->
-            </select>
-            <button onclick="getRandomEpisode()" class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Losuj odcinek
-            </button>
-        </div>
-    </div>
-    <div id="episode" class="mt-4 text-center text-lg"></div>
-    <script src="script.js"></script>
 </body>
 </html>
