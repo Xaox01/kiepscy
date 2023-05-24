@@ -3617,7 +3617,7 @@
         ]
         ;
 
-        function getFavorites() {
+      function getFavorites() {
     const favorites = localStorage.getItem('favorites');
     console.log('Favorites from localStorage:', favorites);
     return favorites ? JSON.parse(favorites) : [];
@@ -3626,20 +3626,28 @@
 function updateFavorites() {
     const favorites = getFavorites();
     const favoritesList = document.getElementById('favorites');
-    favoritesList.innerHTML = favorites.map(episode => `<li><a href="${episode.link}">${episode.title}</a></li>`).join('');
+    favoritesList.innerHTML = favorites.map(episode => `
+        <li>
+            <a href="${episode.link}">${episode.title}</a>
+            <button onclick="toggleFavorite(${JSON.stringify(episode).replace(/"/g, '&quot;')})">❌</button>
+        </li>
+    `).join('');
 }
 
-function addToFavorites(episode) {
+function toggleFavorite(episode) {
     const favorites = getFavorites();
-    const isAlreadyFavorite = favorites.some(favorite => favorite.number === episode.number && favorite.title === episode.title);
+    const favoriteIndex = favorites.findIndex(favorite => favorite.number === episode.number && favorite.title === episode.title);
 
-    if (!isAlreadyFavorite) {
+    if (favoriteIndex === -1) {
+        // Odcinek nie jest w ulubionych, więc go dodaj
         favorites.push(episode);
-        localStorage.setItem('favorites', JSON.stringify(favorites));
-        updateFavorites();
     } else {
-        alert('Ten odcinek jest już w ulubionych.');
+        // Odcinek jest już w ulubionych, więc go usuń
+        favorites.splice(favoriteIndex, 1);
     }
+
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    updateFavorites();
 }
 
 function getRandomEpisode() {
@@ -3657,13 +3665,15 @@ function getRandomEpisode() {
         alert('Nie ma odcinków w tym sezonie.');
         return;
     }
+    
     const randomIndex = Math.floor(Math.random() * episodesToChooseFrom.length);
     const episode = episodesToChooseFrom[randomIndex];
+    
     document.getElementById('episode').innerHTML = `
         <p>
             ${episode.number}. ${episode.title} 
             <a href="${episode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a>
-            <span class="cursor-pointer" onclick="addToFavorites(${JSON.stringify(episode).replace(/"/g, '&quot;')})">❤️</span>
+            <span class="cursor-pointer" onclick="toggleFavorite(${JSON.stringify(episode).replace(/"/g, '&quot;')})">❤️</span>
         </p>
     `;
 }
@@ -3677,7 +3687,7 @@ function searchEpisode() {
             <p>
                 ${foundEpisode.number}. ${foundEpisode.title} 
                 <a href="${foundEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a>
-                <span class="cursor-pointer" onclick="addToFavorites(${JSON.stringify(foundEpisode).replace(/"/g, '&quot;')})">❤️</span>
+                <span class="cursor-pointer" onclick="toggleFavorite(${JSON.stringify(foundEpisode).replace(/"/g, '&quot;')})">❤️</span>
             </p>
         `;
     } else {
@@ -3700,6 +3710,7 @@ document.addEventListener('click', function() {
 
 // Aktualizacja ulubionych odcinków na starcie
 updateFavorites();
+
 
 
 
