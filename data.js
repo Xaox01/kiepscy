@@ -1,5 +1,5 @@
-
-let data = [
+<script>
+let episodes = [
 {
 "season": 1,
 "number": 1,
@@ -3563,3 +3563,4 @@ function searchEpisode() {
     }
 }
 
+</script>

@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Losowanie odcinków</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.4/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        #menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #menu.show {
+            transform: translateX(0);
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
     <div class="w-full fixed top-0 left-0 p-4">
@@ -68,8 +78,13 @@
         </div>
     </div>
     <div id="episode" class="mt-4 text-center text-lg"></div>
+    <button class="fixed top-0 right-0 m-4" onclick="toggleMenu(event)">☰</button>
+    <div id="menu" class="fixed top-0 right-0 h-full w-64 p-4 bg-gray-700 text-white overflow-auto" onclick="event.stopPropagation()">
+        <h2 class="text-xl mt-4">Ulubione odcinki:</h2>
+        <div id="favorites"></div>
+    </div>
     <script>
-        let episodes = [
+        const episodes = [
         {
         "season": 1,
         "number": 1,
@@ -3601,38 +3616,91 @@
         
         ]
         ;
-        
-        function getRandomEpisode() {
-            const selectedSeason = document.getElementById('season').value;
-            let episodesToChooseFrom;
-        
-            if (selectedSeason === 'all') {
-                episodesToChooseFrom = episodes;
-            } else {
-                const selectedSeasonNumber = parseInt(selectedSeason, 10);
-                episodesToChooseFrom = episodes.filter(episode => episode.season === selectedSeasonNumber);
-            }
-        
-            if (episodesToChooseFrom.length === 0) {
-                alert('Nie ma odcinków w tym sezonie.');
-                return;
-            }
-            const randomIndex = Math.floor(Math.random() * episodesToChooseFrom.length);
-            const episode = episodesToChooseFrom[randomIndex];
-            document.getElementById('episode').innerHTML = `<p>${episode.number}. ${episode.title} <a href="${episode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a></p>`;
-        }
-        
-        function searchEpisode() {
-            const searchTerm = document.getElementById('search').value;
-            const foundEpisode = episodes.find(episode => episode.title.toLowerCase().includes(searchTerm.toLowerCase()));
-        
-            if (foundEpisode) {
-                document.getElementById('episode').innerHTML = `<p>${foundEpisode.number}. ${foundEpisode.title} <a href="${foundEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a></p>`;
-            } else {
-                alert('Nie znaleziono odcinka.');
-            }
-        }
-        
-        </script>
+
+function getFavorites() {
+    const favorites = localStorage.getItem('favorites');
+    return favorites ? JSON.parse(favorites) : [];
+}
+
+function updateFavorites() {
+    const favorites = getFavorites();
+    const favoritesList = document.getElementById('favorites');
+    favoritesList.innerHTML = favorites.map(episode => `<li>${episode.title}</li>`).join('');
+}
+
+function addToFavorites(episode) {
+    const favorites = getFavorites();
+    const isAlreadyFavorite = favorites.some(favorite => favorite.number === episode.number && favorite.title === episode.title);
+
+    if (!isAlreadyFavorite) {
+        favorites.push(episode);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        updateFavorites();
+    } else {
+        alert('Ten odcinek jest już w ulubionych.');
+    }
+}
+
+function getRandomEpisode() {
+    const selectedSeason = document.getElementById('season').value;
+    let episodesToChooseFrom;
+
+    if (selectedSeason === 'all') {
+        episodesToChooseFrom = episodes;
+    } else {
+        const selectedSeasonNumber = parseInt(selectedSeason, 10);
+        episodesToChooseFrom = episodes.filter(episode => episode.season === selectedSeasonNumber);
+    }
+
+    if (episodesToChooseFrom.length === 0) {
+        alert('Nie ma odcinków w tym sezonie.');
+        return;
+    }
+    const randomIndex = Math.floor(Math.random() * episodesToChooseFrom.length);
+    const episode = episodesToChooseFrom[randomIndex];
+    document.getElementById('episode').innerHTML = `
+        <p>
+            ${episode.number}. ${episode.title} 
+            <a href="${episode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a>
+            <span class="cursor-pointer" onclick="addToFavorites(${JSON.stringify(episode)})">❤️</span>
+        </p>
+    `;
+}
+
+function searchEpisode() {
+    const searchTerm = document.getElementById('search').value;
+    const foundEpisode = episodes.find(episode => episode.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    if (foundEpisode) {
+        document.getElementById('episode').innerHTML = `
+            <p>
+                ${foundEpisode.number}. ${foundEpisode.title} 
+                <a href="${foundEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a>
+                <span class="cursor-pointer" onclick="addToFavorites(${JSON.stringify(foundEpisode)})">❤️</span>
+            </p>
+        `;
+    } else {
+        alert('Nie znaleziono odcinka.');
+    }
+}
+
+function toggleMenu(event) {
+    const menu = document.getElementById('menu');
+    menu.classList.toggle('show');
+    event.stopPropagation();
+}
+
+document.addEventListener('click', function() {
+    const menu = document.getElementById('menu');
+    if (menu.classList.contains('show')) {
+        menu.classList.remove('show');
+    }
+});
+
+// Aktualizacja ulubionych odcinków na starcie
+updateFavorites();
+
+
+    </script>
 </body>
 </html>
