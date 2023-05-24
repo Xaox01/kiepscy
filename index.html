@@ -3617,15 +3617,16 @@
         ]
         ;
 
-function getFavorites() {
+        function getFavorites() {
     const favorites = localStorage.getItem('favorites');
+    console.log('Favorites from localStorage:', favorites);
     return favorites ? JSON.parse(favorites) : [];
 }
 
 function updateFavorites() {
     const favorites = getFavorites();
     const favoritesList = document.getElementById('favorites');
-    favoritesList.innerHTML = favorites.map(episode => `<li>${episode.title}</li>`).join('');
+    favoritesList.innerHTML = favorites.map(episode => `<li><a href="${episode.link}">${episode.title}</a></li>`).join('');
 }
 
 function addToFavorites(episode) {
@@ -3662,7 +3663,7 @@ function getRandomEpisode() {
         <p>
             ${episode.number}. ${episode.title} 
             <a href="${episode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a>
-            <span class="cursor-pointer" onclick="addToFavorites(${JSON.stringify(episode)})">❤️</span>
+            <span class="cursor-pointer" onclick="addToFavorites(${JSON.stringify(episode).replace(/"/g, '&quot;')})">❤️</span>
         </p>
     `;
 }
@@ -3676,7 +3677,7 @@ function searchEpisode() {
             <p>
                 ${foundEpisode.number}. ${foundEpisode.title} 
                 <a href="${foundEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a>
-                <span class="cursor-pointer" onclick="addToFavorites(${JSON.stringify(foundEpisode)})">❤️</span>
+                <span class="cursor-pointer" onclick="addToFavorites(${JSON.stringify(foundEpisode).replace(/"/g, '&quot;')})">❤️</span>
             </p>
         `;
     } else {
@@ -3699,6 +3700,7 @@ document.addEventListener('click', function() {
 
 // Aktualizacja ulubionych odcinków na starcie
 updateFavorites();
+
 
 
     </script>
