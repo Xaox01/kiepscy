@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Losowanie odcinków</title>
-    <link rel="icon" href="pazdzioch.png" type="image/x-icon">
+    <link rel="icon" href="img/pazdzioch.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.4/dist/tailwind.min.css" rel="stylesheet">
     <style>
         #menu {
@@ -42,33 +42,34 @@
                 <option value="1">Sezon 1</option>
                  <option value="2">Sezon 2</option>
                  <option value="3">Sezon 3</option>
-    <option value="4">Sezon 4</option>
-    <option value="5">Sezon 5</option>
-    <option value="6">Sezon 6</option>
-    <option value="7">Sezon 7</option>
-    <option value="8">Sezon 8</option>
-    <option value="9">Sezon 9</option>
-    <option value="10">Sezon 10</option>
-    <option value="11">Sezon 11</option>
-    <option value="12">Sezon 12</option>
-    <option value="13">Sezon 13</option>
-    <option value="14">Sezon 14</option>
-    <option value="15">Sezon 15</option>
-    <option value="16">Sezon 16</option>
-    <option value="17">Sezon 17</option>
-    <option value="18">Sezon 18</option>
-    <option value="19">Sezon 19</option>
-    <option value="20">Sezon 20</option>
-    <option value="21">Sezon 21</option>
-    <option value="22">Sezon 22</option>
-    <option value="23">Sezon 23</option>
-    <option value="24">Sezon 24</option>
-    <option value="25">Sezon 25</option>
-    <option value="26">Sezon 26</option>
-    <option value="27">Sezon 27</option>
-    <option value="28">Sezon 28</option>
-    <option value="29">Sezon 29</option>
-    <option value="30">Sezon 30</option>
+                 <option value="4">Sezon 4</option>
+                 <option value="5">Sezon 5</option>
+                 <option value="6">Sezon 6</option>
+                 <option value="7">Sezon 7</option>
+                 <option value="8">Sezon 8</option>
+                 <option value="9">Sezon 9</option>
+                 <option value="10">Sezon 10</option>
+                 <option value="11">Sezon 11</option>
+                 <option value="12">Sezon 12</option>
+                 <option value="13">Sezon 13</option>
+                 <option value="14">Sezon 14</option>
+                 <option value="15">Sezon 15</option>
+                 <option value="16">Sezon 16</option>
+                 <option value="17">Sezon 17</option>
+                 <option value="18">Sezon 18</option>
+                 <option value="19">Sezon 19</option>
+                 <option value="20">Sezon 20</option>
+                 <option value="21">Sezon 21</option>
+                 <option value="22">Sezon 22</option>
+                 <option value="23">Sezon 23</option>
+                 <option value="24">Sezon 24</option>
+                 <option value="25">Sezon 25</option>
+                 <option value="26">Sezon 26</option>
+                 <option value="27">Sezon 27</option>
+                 <option value="28">Sezon 28</option>
+                 <option value="29">Sezon 29</option>
+                 <option value="30">Sezon 30</option>
+                 <option value="33">Sezon 31</option>
             </select>
             <button onclick="getRandomEpisode()" class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Losuj odcinek
@@ -3629,10 +3630,7 @@
         "title": "Wieczna Kwaratanna",
         "link": "https://filman.cc/serial-online/swiat-wedlug-kiepskich/154234/wieczna-kwarantanna"
         }
-
-        
-        ]
-        ;
+        ];
 
       function getFavorites() {
     const favorites = localStorage.getItem('favorites');
@@ -3640,7 +3638,7 @@
     return favorites ? JSON.parse(favorites) : [];
 }
 
-function updateFavorites() {
+      function updateFavorites() {
     const favorites = getFavorites();
     const favoritesList = document.getElementById('favorites');
     favoritesList.innerHTML = favorites.map(episode => `
@@ -3651,7 +3649,7 @@ function updateFavorites() {
     `).join('');
 }
 
-function toggleFavorite(episode) {
+      function toggleFavorite(episode) {
     const favorites = getFavorites();
     const favoriteIndex = favorites.findIndex(favorite => favorite.number === episode.number && favorite.title === episode.title);
 
@@ -3667,7 +3665,7 @@ function toggleFavorite(episode) {
     updateFavorites();
 }
 
-function getRandomEpisode() {
+     function getRandomEpisode() {
     const selectedSeason = document.getElementById('season').value;
     let episodesToChooseFrom;
 
@@ -3695,7 +3693,7 @@ function getRandomEpisode() {
     `;
 }
 
-function searchEpisode() {
+     function searchEpisode() {
     const searchTerm = document.getElementById('search').value;
     const foundEpisode = episodes.find(episode => episode.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
@@ -3712,25 +3710,20 @@ function searchEpisode() {
     }
 }
 
-function toggleMenu(event) {
+    function toggleMenu(event) {
     const menu = document.getElementById('menu');
     menu.classList.toggle('show');
     event.stopPropagation();
 }
 
-document.addEventListener('click', function() {
+    document.addEventListener('click', function() {
     const menu = document.getElementById('menu');
     if (menu.classList.contains('show')) {
         menu.classList.remove('show');
     }
 });
 
-// Aktualizacja ulubionych odcinków na starcie
 updateFavorites();
-
-
-
-
     </script>
     <footer>
         <a href="https://t.me/kiepskikanal" target="_blank">
