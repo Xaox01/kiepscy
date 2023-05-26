@@ -17,24 +17,23 @@
         gtag('config', 'G-HNNSEN84MW');
     </script>
 
-    <style>
-        #bmc-button img {
-            width: 150px !important;
-            height: auto !important;
-        }
-        #bmc-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-    </style>
+<style>
+    #menu {
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #menu.show {
+        transform: translateX(0);
+    }
+    
+</style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col justify-between items-center">
     <header class="w-full fixed top-0 left-0 p-4">
         <img src="./img/pazdzioch.png" alt="Logo" class="h-12">
     </header>
-
+    
     <main class="flex flex-col items-center justify-center mt-8 w-full">
         <div class="p-6 max-w-2xl mx-auto bg-gray-800 rounded-xl shadow-md space-y-4">
             <div class="text-xl font-medium text-white">Pełna lista odcinków</div>
@@ -54,6 +53,12 @@
             <!-- Lista odcinków -->
             <ul id="episodes-list" class="space-y-2"></ul>
         </div>
+
+        <button class="fixed top-0 right-0 m-4" onclick="toggleMenu(event)">☰</button>
+    <div id="menu" class="fixed top-0 right-0 h-full w-64 p-4 bg-gray-700 text-white overflow-auto" onclick="event.stopPropagation()">
+        <h2 class="text-xl mt-4">Ulubione odcinki:</h2>
+        <div id="favorites"></div>
+    </div>
     </main>
 
     <footer class="flex justify-center items-center space-x-4 pb-4">
@@ -137,6 +142,19 @@
 }
     
         searchEpisodes();
+
+        function toggleMenu(event) {
+const menu = document.getElementById('menu');
+menu.classList.toggle('show');
+event.stopPropagation();
+}
+
+document.addEventListener('click', function() {
+const menu = document.getElementById('menu');
+if (menu.classList.contains('show')) {
+    menu.classList.remove('show');
+}
+});
     </script>
 </body>
 </html>
