@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pełna lista odcinków</title>
+    <link rel="icon" href="./img/pazdzioch.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.4/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNNSEN84MW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-HNNSEN84MW');
+    </script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col justify-between items-center">
+    <header class="w-full fixed top-0 left-0 p-4">
+        <img src="./img/pazdzioch.png" alt="Logo" class="h-12">
+    </header>
+    
+    <main class="flex flex-col items-center justify-center mt-8 w-full">
+        <div class="p-6 max-w-2xl mx-auto bg-gray-800 rounded-xl shadow-md space-y-4">
+            <div class="text-xl font-medium text-white">Pełna lista odcinków</div>
+            <!-- Pole do wyszukiwania -->
+            <div class="w-full py-2">
+                <input type="search" id="search" placeholder="Wyszukaj odcinek..." class="w-full px-3 py-2 text-black bg-white rounded-md focus:outline-none" />
+            </div>
+            <!-- Lista odcinków -->
+            <ul id="episodes-list" class="space-y-2">
+                <!-- Przykładowy odcinek -->
+                <!-- Dodane odcinki zostaną tutaj -->
+            </ul>
+        </div>
+    </main>
+
+    <footer class="flex justify-center items-center space-x-4 pb-4">
+        <a href="https://t.me/kiepskikanal" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram icon" style="width: 50px;">
+        </a>
+        <a href="index.html" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Powrót do strony głównej
+        </a>
+    </footer>
+
+    <script src="data.js"></script>
+    <script>
+        const episodesList = document.getElementById('episodes-list');
+        const searchInput = document.getElementById('search');
+
+        function createEpisodeElement(episode) {
+            const listItem = document.createElement('li');
+
+            const link = document.createElement('a');
+            link.textContent = `Sezon ${episode.season}, Odcinek ${episode.number}: ${episode.title}`;
+            link.href = `player.html?episode=${episode.number}`;
+            link.classList.add('text-indigo-500', 'hover:text-indigo-600');
+
+            listItem.appendChild(link);
+
+            return listItem;
+        }
+
+        episodes.forEach(episode => {
+            episodesList.appendChild(createEpisodeElement(episode));
+        });
+
+        searchInput.addEventListener('input', function() {
+            const searchQuery = this.value.toLowerCase();
+
+            episodesList.innerHTML = '';
+
+            episodes.filter(episode => {
+                const episodeText = `Sezon ${episode.season}, Odcinek ${episode.number}: ${episode.title}`.toLowerCase();
+                return episodeText.includes(searchQuery);
+            }).forEach(episode => {
+                episodesList.appendChild(createEpisodeElement(episode));
+            });
+        });
+    </script>
+</body>
+</html>

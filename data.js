@@ -3627,3 +3627,4 @@ if (menu.classList.contains('show')) {
 });
 
 updateFavorites();
+

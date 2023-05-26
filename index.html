@@ -26,10 +26,11 @@
   gtag('config', 'G-HNNSEN84MW');
 </script>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
-    <div class="w-full fixed top-0 left-0 p-4">
+<body class="bg-gray-900 text-white min-h-screen flex flex-col justify-between items-center">
+    <header class="w-full fixed top-0 left-0 p-4">
         <img src="./img/pazdzioch.png" alt="Logo" class="h-12">
-    </div>
+    </header>
+    <main class="flex flex-col items-center justify-center mt-40">
     <div class="p-6 max-w-sm mx-auto bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
         <div>
             <div class="text-xl font-medium text-white">Losowanie odcinków</div>
@@ -94,9 +95,13 @@
         <h2 class="text-xl mt-4">Ulubione odcinki:</h2>
         <div id="favorites"></div>
     </div>
-    <footer>
+    </main>
+    <footer class="flex justify-center items-center space-x-4 pb-4">
         <a href="https://t.me/kiepskikanal" target="_blank">
             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram icon" style="width: 50px;">
+        </a>
+        <a href="lista_odcinkow.html" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Pełna lista odcinków
         </a>
     </footer>
     <script src="data.js"></script>
