@@ -6,6 +6,7 @@
     <title>Pełna lista odcinków</title>
     <link rel="icon" href="./img/pazdzioch.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.4/dist/tailwind.min.css" rel="stylesheet">
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNNSEN84MW"></script>
     <script>
@@ -15,24 +16,39 @@
 
         gtag('config', 'G-HNNSEN84MW');
     </script>
+
+    <style>
+        #bmc-button img {
+            width: 150px !important;
+            height: auto !important;
+        }
+        #bmc-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col justify-between items-center">
     <header class="w-full fixed top-0 left-0 p-4">
         <img src="./img/pazdzioch.png" alt="Logo" class="h-12">
     </header>
-    
+
     <main class="flex flex-col items-center justify-center mt-8 w-full">
         <div class="p-6 max-w-2xl mx-auto bg-gray-800 rounded-xl shadow-md space-y-4">
             <div class="text-xl font-medium text-white">Pełna lista odcinków</div>
-            <!-- Pole do wyszukiwania -->
-            <div class="w-full py-2">
-                <input type="search" id="search" placeholder="Wyszukaj odcinek..." class="w-full px-3 py-2 text-black bg-white rounded-md focus:outline-none" />
+
+            <!-- Wyszukiwarka i filtr -->
+            <div class="flex space-x-4">
+                <input type="text" id="search-input" onkeyup="searchEpisodes()" placeholder="Wyszukaj odcinki..." class="bg-gray-700 rounded-md px-3 py-2 w-full">
+                <select id="season-select" onchange="searchEpisodes()" class="bg-gray-700 rounded-md px-3 py-2">
+                    <option value="">Wszystkie sezony</option>
+                </select>
             </div>
+
             <!-- Lista odcinków -->
-            <ul id="episodes-list" class="space-y-2">
-                <!-- Przykładowy odcinek -->
-                <!-- Dodane odcinki zostaną tutaj -->
-            </ul>
+            <ul id="episodes-list" class="space-y-2"></ul>
         </div>
     </main>
 
@@ -48,7 +64,8 @@
     <script src="data.js"></script>
     <script>
         const episodesList = document.getElementById('episodes-list');
-        const searchInput = document.getElementById('search');
+        const searchInput = document.getElementById('search-input');
+        const seasonSelect = document.getElementById('season-select');
 
         function createEpisodeElement(episode) {
             const listItem = document.createElement('li');
@@ -63,23 +80,35 @@
             return listItem;
         }
 
-        episodes.forEach(episode => {
-            episodesList.appendChild(createEpisodeElement(episode));
-        });
+        let seasons = [...new Set(episodes.map(e => e.season))].sort();
+        for(let season of seasons) {
+            let option = document.createElement('option');
+            option.value = season;
+            option.textContent = 'Sezon ' + season;
+            seasonSelect.appendChild(option);
+        }
 
-        searchInput.addEventListener('input', function() {
-            const searchQuery = this.value.toLowerCase();
+        function searchEpisodes() {
+            let searchText = searchInput.value.toLowerCase();
+            let selectedSeason = seasonSelect.value;
 
-            episodesList.innerHTML = '';
-
-            episodes.filter(episode => {
-                const episodeText = `Sezon ${episode.season}, Odcinek ${episode.number}: ${episode.title}`.toLowerCase();
-                return episodeText.includes(searchQuery);
-            }).forEach(episode => {
-                episodesList.appendChild(createEpisodeElement(episode));
+            let filteredEpisodes = episodes.filter(e => {
+                let episodeText = `${e.season}.${e.number}. ${e.title}`.toLowerCase();
+                let matchSearchText = episodeText.includes(searchText);
+                let matchSelectedSeason = !selectedSeason || e.season == selectedSeason;
+                return matchSearchText && matchSelectedSeason;
             });
-        });
+
+            while(episodesList.firstChild) {
+                episodesList.removeChild(episodesList.firstChild);
+            }
+
+            for(let episode of filteredEpisodes) {
+                episodesList.appendChild(createEpisodeElement(episode));
+            }
+        }
+
+        searchEpisodes();
     </script>
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="kiepskaStrona" data-description="Support me on Buy me a coffee!" data-message="panie postaw pan piwo" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </body>
 </html>
