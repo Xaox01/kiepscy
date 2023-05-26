@@ -108,12 +108,24 @@
             matchRanking = ranking.some(r => {
                 // Ignoruje numer odcinka w danych rankingu podczas porównywania tytułów
                 let rankingTitle = r.title.replace(/^\d+\s/, '').toLowerCase();
-                return rankingTitle === e.title.toLowerCase() && parseInt(r.position) <= 150;
+                return rankingTitle === e.title.toLowerCase() && parseInt(r.position) <= 100;
             });
         }
 
         return matchSearchText && matchSelectedSeason && matchRanking;
     });
+
+    if (selectedRanking === 'top') {
+        filteredEpisodes.sort((a, b) => {
+            let aRanking = ranking.find(r => r.title.replace(/^\d+\s/, '').toLowerCase() === a.title.toLowerCase());
+            let bRanking = ranking.find(r => r.title.replace(/^\d+\s/, '').toLowerCase() === b.title.toLowerCase());
+
+            let aPosition = aRanking ? parseInt(aRanking.position) : Infinity;
+            let bPosition = bRanking ? parseInt(bRanking.position) : Infinity;
+
+            return aPosition - bPosition;
+        });
+    }
 
     while(episodesList.firstChild) {
         episodesList.removeChild(episodesList.firstChild);
