@@ -55,7 +55,7 @@
 
             const link = document.createElement('a');
             link.textContent = `Sezon ${episode.season}, Odcinek ${episode.number}: ${episode.title}`;
-            link.href = `player.html?episode=${episode.number}`;
+            link.href = `${episode.link}`;
             link.classList.add('text-indigo-500', 'hover:text-indigo-600');
 
             listItem.appendChild(link);
