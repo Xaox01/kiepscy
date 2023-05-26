@@ -27,19 +27,27 @@
         transform: translateX(0);
     }
     
+    #logo {
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+    
 </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col justify-between items-center">
-    <header class="w-full fixed top-0 left-0 p-4">
-        <img src="./img/pazdzioch.png" alt="Logo" class="h-12">
+    <header class="w-full p-4 md:p-8">
+        <a href="index.html">
+            <img id="logo" src="./img/pazdzioch.png" alt="Logo" class="h-12 md:h-16 max-w-full">
+        </a>
     </header>
     
-    <main class="flex flex-col items-center justify-center mt-8 w-full">
-        <div class="p-6 max-w-2xl mx-auto bg-gray-800 rounded-xl shadow-md space-y-4">
-            <div class="text-xl font-medium text-white">Pełna lista odcinków</div>
+    <main class="flex flex-col items-center justify-center mt-40 md:mt-48 w-full">
+        <div class="p-6 max-w-sm mx-auto bg-gray-800 rounded-xl shadow-md space-y-4 md:max-w-2xl md:space-y-8">
+            <div class="text-lg font-medium text-white md:text-xl">Pełna lista odcinków</div>
 
 <!-- Wyszukiwarka i filtr -->
-<div class="flex space-x-4">
+<div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
     <input type="text" id="search-input" onkeyup="searchEpisodes()" placeholder="Wyszukaj odcinki..." class="bg-gray-700 rounded-md px-3 py-2 w-full">
     <select id="season-select" onchange="searchEpisodes()" class="bg-gray-700 rounded-md px-3 py-2">
         <option value="">Wszystkie sezony</option>
@@ -55,21 +63,20 @@
         </div>
 
         <button class="fixed top-0 right-0 m-4" onclick="toggleMenu(event)">☰</button>
-    <div id="menu" class="fixed top-0 right-0 h-full w-64 p-4 bg-gray-700 text-white overflow-auto" onclick="event.stopPropagation()">
+    <div id="menu" class="fixed top-0 right-0 h-full w-64 p-4 bg-gray-700 text-white overflow-auto md:w-80" onclick="event.stopPropagation()">
         <h2 class="text-xl mt-4">Ulubione odcinki:</h2>
         <div id="favorites"></div>
     </div>
     </main>
 
-    <footer class="flex justify-center items-center space-x-4 pb-4">
+    <footer class="flex flex-col items-center justify-center space-y-4 pb-4 md:flex-row md:space-x-4 md:pb-8">
         <a href="https://t.me/kiepskikanal" target="_blank">
             <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram icon" style="width: 50px;">
         </a>
-        <a href="index.html" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <a href="index.html" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 md:text-base">
             Powrót do strony głównej
         </a>
     </footer>
-
     <script src="data.js"></script>
     <script>
         const episodesList = document.getElementById('episodes-list');
@@ -90,8 +97,8 @@
             return listItem;
         }
     
-        let seasons = [...new Set(episodes.map(e => e.season))].sort();
-        for(let season of seasons) {
+        let seasons = [...new Set(episodes.map(e => e.season))].sort((a, b) => a - b);
+        for (let season of seasons) {
             let option = document.createElement('option');
             option.value = season;
             option.textContent = 'Sezon ' + season;
@@ -99,62 +106,62 @@
         }
     
         function searchEpisodes() {
-    let searchText = searchInput.value.toLowerCase();
-    let selectedSeason = seasonSelect.value;
-    let selectedRanking = rankingSelect.value;
-
-    let filteredEpisodes = episodes.filter(e => {
-        let episodeText = `${e.season}.${e.number}. ${e.title}`.toLowerCase();
-        let matchSearchText = episodeText.includes(searchText);
-        let matchSelectedSeason = !selectedSeason || e.season == selectedSeason;
-
-        let matchRanking = true;
-        if (selectedRanking === 'top') {
-            matchRanking = ranking.some(r => {
-                // Ignoruje numer odcinka w danych rankingu podczas porównywania tytułów
-                let rankingTitle = r.title.replace(/^\d+\s/, '').toLowerCase();
-                return rankingTitle === e.title.toLowerCase() && parseInt(r.position) <= 150;
+            let searchText = searchInput.value.toLowerCase();
+            let selectedSeason = seasonSelect.value;
+            let selectedRanking = rankingSelect.value;
+    
+            let filteredEpisodes = episodes.filter(e => {
+                let episodeText = `${e.season}.${e.number}. ${e.title}`.toLowerCase();
+                let matchSearchText = episodeText.includes(searchText);
+                let matchSelectedSeason = !selectedSeason || e.season == selectedSeason;
+    
+                let matchRanking = true;
+                if (selectedRanking === 'top') {
+                    matchRanking = ranking.some(r => {
+                        let rankingTitle = r.title.replace(/^\d+\s/, '').toLowerCase();
+                        return rankingTitle === e.title.toLowerCase() && parseInt(r.position) <= 150;
+                    });
+                }
+    
+                return matchSearchText && matchSelectedSeason && matchRanking;
             });
+    
+            if (selectedRanking === 'top') {
+                filteredEpisodes.sort((a, b) => {
+                    let aRanking = ranking.find(r => r.title.replace(/^\d+\s/, '').toLowerCase() === a.title.toLowerCase());
+                    let bRanking = ranking.find(r => r.title.replace(/^\d+\s/, '').toLowerCase() === b.title.toLowerCase());
+    
+                    let aPosition = aRanking ? parseInt(aRanking.position) : Infinity;
+                    let bPosition = bRanking ? parseInt(bRanking.position) : Infinity;
+    
+                    return aPosition - bPosition;
+                });
+            }
+    
+            while (episodesList.firstChild) {
+                episodesList.removeChild(episodesList.firstChild);
+            }
+    
+            for (let episode of filteredEpisodes) {
+                episodesList.appendChild(createEpisodeElement(episode));
+            }
         }
-
-        return matchSearchText && matchSelectedSeason && matchRanking;
-    });
-
-    if (selectedRanking === 'top') {
-        filteredEpisodes.sort((a, b) => {
-            let aRanking = ranking.find(r => r.title.replace(/^\d+\s/, '').toLowerCase() === a.title.toLowerCase());
-            let bRanking = ranking.find(r => r.title.replace(/^\d+\s/, '').toLowerCase() === b.title.toLowerCase());
-
-            let aPosition = aRanking ? parseInt(aRanking.position) : Infinity;
-            let bPosition = bRanking ? parseInt(bRanking.position) : Infinity;
-
-            return aPosition - bPosition;
-        });
-    }
-
-    while(episodesList.firstChild) {
-        episodesList.removeChild(episodesList.firstChild);
-    }
-
-    for(let episode of filteredEpisodes) {
-        episodesList.appendChild(createEpisodeElement(episode));
-    }
-}
     
         searchEpisodes();
-
+    
         function toggleMenu(event) {
-const menu = document.getElementById('menu');
-menu.classList.toggle('show');
-event.stopPropagation();
-}
-
-document.addEventListener('click', function() {
-const menu = document.getElementById('menu');
-if (menu.classList.contains('show')) {
-    menu.classList.remove('show');
-}
-});
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('show');
+            event.stopPropagation();
+        }
+    
+        document.addEventListener('click', function () {
+            const menu = document.getElementById('menu');
+            if (menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            }
+        });
     </script>
+    
 </body>
 </html>
