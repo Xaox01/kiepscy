@@ -39,13 +39,17 @@
         <div class="p-6 max-w-2xl mx-auto bg-gray-800 rounded-xl shadow-md space-y-4">
             <div class="text-xl font-medium text-white">Pełna lista odcinków</div>
 
-            <!-- Wyszukiwarka i filtr -->
-            <div class="flex space-x-4">
-                <input type="text" id="search-input" onkeyup="searchEpisodes()" placeholder="Wyszukaj odcinki..." class="bg-gray-700 rounded-md px-3 py-2 w-full">
-                <select id="season-select" onchange="searchEpisodes()" class="bg-gray-700 rounded-md px-3 py-2">
-                    <option value="">Wszystkie sezony</option>
-                </select>
-            </div>
+<!-- Wyszukiwarka i filtr -->
+<div class="flex space-x-4">
+    <input type="text" id="search-input" onkeyup="searchEpisodes()" placeholder="Wyszukaj odcinki..." class="bg-gray-700 rounded-md px-3 py-2 w-full">
+    <select id="season-select" onchange="searchEpisodes()" class="bg-gray-700 rounded-md px-3 py-2">
+        <option value="">Wszystkie sezony</option>
+    </select>
+    <select id="ranking-select" onchange="searchEpisodes()" class="bg-gray-700 rounded-md px-3 py-2">
+        <option value="">Wszystkie odcinki</option>
+        <option value="top">Top 10</option>
+    </select>
+</div>
 
             <!-- Lista odcinków -->
             <ul id="episodes-list" class="space-y-2"></ul>
@@ -66,20 +70,21 @@
         const episodesList = document.getElementById('episodes-list');
         const searchInput = document.getElementById('search-input');
         const seasonSelect = document.getElementById('season-select');
-
+        const rankingSelect = document.getElementById('ranking-select');
+    
         function createEpisodeElement(episode) {
             const listItem = document.createElement('li');
-
+    
             const link = document.createElement('a');
             link.textContent = `Sezon ${episode.season}, Odcinek ${episode.number}: ${episode.title}`;
             link.href = `${episode.link}`;
             link.classList.add('text-indigo-500', 'hover:text-indigo-600');
-
+    
             listItem.appendChild(link);
-
+    
             return listItem;
         }
-
+    
         let seasons = [...new Set(episodes.map(e => e.season))].sort();
         for(let season of seasons) {
             let option = document.createElement('option');
@@ -87,27 +92,38 @@
             option.textContent = 'Sezon ' + season;
             seasonSelect.appendChild(option);
         }
-
+    
         function searchEpisodes() {
-            let searchText = searchInput.value.toLowerCase();
-            let selectedSeason = seasonSelect.value;
+    let searchText = searchInput.value.toLowerCase();
+    let selectedSeason = seasonSelect.value;
+    let selectedRanking = rankingSelect.value;
 
-            let filteredEpisodes = episodes.filter(e => {
-                let episodeText = `${e.season}.${e.number}. ${e.title}`.toLowerCase();
-                let matchSearchText = episodeText.includes(searchText);
-                let matchSelectedSeason = !selectedSeason || e.season == selectedSeason;
-                return matchSearchText && matchSelectedSeason;
+    let filteredEpisodes = episodes.filter(e => {
+        let episodeText = `${e.season}.${e.number}. ${e.title}`.toLowerCase();
+        let matchSearchText = episodeText.includes(searchText);
+        let matchSelectedSeason = !selectedSeason || e.season == selectedSeason;
+
+        let matchRanking = true;
+        if (selectedRanking === 'top') {
+            matchRanking = ranking.some(r => {
+                // Ignoruje numer odcinka w danych rankingu podczas porównywania tytułów
+                let rankingTitle = r.title.replace(/^\d+\s/, '').toLowerCase();
+                return rankingTitle === e.title.toLowerCase() && parseInt(r.position) <= 10;
             });
-
-            while(episodesList.firstChild) {
-                episodesList.removeChild(episodesList.firstChild);
-            }
-
-            for(let episode of filteredEpisodes) {
-                episodesList.appendChild(createEpisodeElement(episode));
-            }
         }
 
+        return matchSearchText && matchSelectedSeason && matchRanking;
+    });
+
+    while(episodesList.firstChild) {
+        episodesList.removeChild(episodesList.firstChild);
+    }
+
+    for(let episode of filteredEpisodes) {
+        episodesList.appendChild(createEpisodeElement(episode));
+    }
+}
+    
         searchEpisodes();
     </script>
 </body>
