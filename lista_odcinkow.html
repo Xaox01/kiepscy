@@ -108,7 +108,7 @@
             matchRanking = ranking.some(r => {
                 // Ignoruje numer odcinka w danych rankingu podczas porównywania tytułów
                 let rankingTitle = r.title.replace(/^\d+\s/, '').toLowerCase();
-                return rankingTitle === e.title.toLowerCase() && parseInt(r.position) <= 100;
+                return rankingTitle === e.title.toLowerCase() && parseInt(r.position) <= 150;
             });
         }
 
