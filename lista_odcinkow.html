@@ -32,6 +32,51 @@
         top: 0;
         left: 0;
     }
+    #supportModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1a202c; /* Dostosuj kolor tła do reszty strony */
+            color: #ffffff; /* Dostosuj kolor tekstu do reszty strony */
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            z-index: 9999;
+            max-width: 80%;
+        }
+        
+        #supportModal h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        #supportModal p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        #supportModal button {
+            background-color: #4a90e2; /* Dostosuj kolor przycisku do reszty strony */
+        }
+        #supportModal .btn-yes {
+            background-color: #4a90e2; /* Dostosuj kolor przycisku "Tak, chcę wesprzeć" do reszty strony */
+        }
+
+        #supportModal .btn-no {
+            background-color: #ff6b6b; /* Lekko czerwony kolor przycisku "Nie, dzięki" */
+        }
+
+        /* Dodaj animacje do modalu */
+        @keyframes modalAppear {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
     
 </style>
 </head>
@@ -77,6 +122,18 @@
             Powrót do strony głównej
         </a>
     </footer>
+    <div id="supportModal" class="animated-modal">
+        <div class="text-4xl mb-4">😊</div>
+        <h2 class="text-xl font-semibold mb-2">Wsparcie projektu</h2>
+        <p>Jeśli spodobał ci się nasz projekt to prosimy o wsparcie, dla wspierających mamy dostęp do reszty polskich popularnych seriali za darmo. Dostęp już od 20 zł, pełna lista seriali po kliknięciu przycisku :)</p>        <a href="support.html">
+            <button class="mt-4 mr-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white btn-yes hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Tak, chcę wesprzeć
+            </button>
+        </a>
+        <button onclick="closeSupportModal()" class="mt-4 ml-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white btn-no hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+            Nie, dzięki
+        </button>
+    </div>
     <script src="data.js"></script>
     <script>
         const episodesList = document.getElementById('episodes-list');
@@ -162,6 +219,18 @@
             }
         });
     </script>
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="kiepskaStrona" data-description="Support me on Buy me a coffee!" data-message="panie postaw pan piwo" data-color="#5F7FFF" data-position="Right" data-x_margin="12" data-y_margin="12"></script>
+    <script>
+        function showSupportModal() {
+            document.getElementById('supportModal').style.display = 'block';
+        }
+
+        function closeSupportModal() {
+            document.getElementById('supportModal').style.display = 'none';
+        }
+
+        window.onload = showSupportModal;
+
+        setInterval(showSupportModal, 30000);
+    </script>
 </body>
 </html>
