@@ -7135,18 +7135,24 @@ document.getElementById('episode').innerHTML = `
 
  function searchEpisode() {
 const searchTerm = document.getElementById('search').value;
-const foundEpisode = episodes.find(episode => episode.title.toLowerCase().includes(searchTerm.toLowerCase()));
-
-if (foundEpisode) {
-    document.getElementById('episode').innerHTML = `
-        <p>
-            ${foundEpisode.number}. ${foundEpisode.title} 
-            <a href="${foundEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a>
-            <span class="cursor-pointer" onclick="toggleFavorite(${JSON.stringify(foundEpisode).replace(/"/g, '&quot;')})">❤️</span>
-        </p>
-    `;
+const emptySearch = document.getElementById('emptySearch');
+if(searchTerm.replace(" ","").length==0) {
+  emptySearch.classList.remove("hidden");
 } else {
-    alert('Nie znaleziono odcinka.');
+  emptySearch.classList.add("hidden");
+  const foundEpisode = episodes.find(episode => episode.title.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  if (foundEpisode) {
+      document.getElementById('episode').innerHTML = `
+          <p>
+              ${foundEpisode.number}. ${foundEpisode.title} 
+              <a href="${foundEpisode.link}" class="text-indigo-500 hover:text-indigo-700">Oglądaj</a>
+              <span class="cursor-pointer" onclick="toggleFavorite(${JSON.stringify(foundEpisode).replace(/"/g, '&quot;')})">❤️</span>
+          </p>
+      `;
+  } else {
+      alert('Nie znaleziono odcinka.');
+  }
 }
 }
 
