@@ -41,17 +41,16 @@
         }
 
         #supportModal button {
-            background-color: #4a90e2; /* Dostosuj kolor przycisku do reszty strony */
+            background-color: #4a90e2; 
         }
         #supportModal .btn-yes {
-            background-color: #4a90e2; /* Dostosuj kolor przycisku "Tak, chcę wesprzeć" do reszty strony */
+            background-color: #4a90e2; 
         }
 
         #supportModal .btn-no {
-            background-color: #ff6b6b; /* Lekko czerwony kolor przycisku "Nie, dzięki" */
+            background-color: #ff6b6b; 
         }
 
-        /* Dodaj animacje do modalu */
         @keyframes modalAppear {
             0% {
                 opacity: 0;
@@ -59,6 +58,19 @@
             100% {
                 opacity: 1;
             }
+        }
+        #announcement {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #1a202c;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            display: block; 
+            z-index: 1000;  
+            pointer-events: auto; 
         }
     </style>
     <!-- Google tag (gtag.js) -->
@@ -73,11 +85,11 @@
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col justify-between items-center">
     <header class="w-full fixed top-0 left-0 p-4">
-        <a href="index.html">
-            <img id="logo" src="./img/pazdzioch.png" alt="Logo" class="h-12 md:h-16 max-w-full">
-        </a>
+        
+        
     </header>
     <main class="flex flex-col items-center justify-center mt-40">
+        
     <div class="p-6 max-w-sm mx-auto bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
         <div>
             <div class="text-xl font-medium text-white">Losowanie odcinków</div>
@@ -164,19 +176,44 @@
             Nie, dzięki
         </button>
     </div>
+    <div id="announcement">
+        <span style="font-weight: bold;">UWAGA:</span> Za <span id="countdown"></span> dni strona zostanie przeniesiona na nowy serwer! <a href="https://kiepski-kanal-0cb321edf2c1.herokuapp.com/" style="color: #ffffff; text-decoration: underline;">Kliknij tutaj</a>, aby już teraz zobaczyć nową wersję strony. W nowej wersji strony czekają na państwa nowe funcjonalności jak i nowe seriale za darmo! :)
+    </div>
     <script src="data.js"></script>
     <script>
         function showSupportModal() {
-            document.getElementById('supportModal').style.display = 'block';
+            const modal = document.getElementById('supportModal');
+            modal.style.display = 'block';
         }
 
         function closeSupportModal() {
-            document.getElementById('supportModal').style.display = 'none';
+            const modal = document.getElementById('supportModal');
+            modal.style.display = 'none';
         }
 
         window.onload = showSupportModal;
 
-        setInterval(showSupportModal, 30000);
+        setInterval(showSupportModal, 10000);
+    </script>
+    <script>
+
+        const movingDate = new Date();
+        movingDate.setDate(movingDate.getDate() + 7); 
+
+        function updateCountdown() {
+            const now = new Date();
+            const difference = movingDate - now;
+
+            const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
+
+            document.getElementById('countdown').innerText = days;
+        }
+
+        setInterval(updateCountdown, 1000);
+
+        window.onload = function() {
+            updateCountdown();
+        };
     </script>
 </body>
 </html>
