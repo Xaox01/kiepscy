@@ -15,63 +15,7 @@
         #menu.show {
             transform: translateX(0);
         }
-        #supportModal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #1a202c; /* Dostosuj kolor tła do reszty strony */
-            color: #ffffff; /* Dostosuj kolor tekstu do reszty strony */
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            z-index: 9999;
-            max-width: 80%;
-        }
         
-        #supportModal h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        #supportModal p {
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-
-        #supportModal button {
-            background-color: #4a90e2; 
-        }
-        #supportModal .btn-yes {
-            background-color: #4a90e2; 
-        }
-
-        #supportModal .btn-no {
-            background-color: #ff6b6b; 
-        }
-
-        @keyframes modalAppear {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-        #announcement {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #1a202c;
-            color: #ffffff;
-            padding: 10px;
-            text-align: center;
-            display: block; 
-            z-index: 1000;  
-            pointer-events: auto; 
-        }
     </style>
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNNSEN84MW"></script>
@@ -85,11 +29,11 @@
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col justify-between items-center">
     <header class="w-full fixed top-0 left-0 p-4">
-        
-        
+        <a href="index.html">
+            <img id="logo" src="./img/pazdzioch.png" alt="Logo" class="h-12 md:h-16 max-w-full">
+        </a>
     </header>
     <main class="flex flex-col items-center justify-center mt-40">
-        
     <div class="p-6 max-w-sm mx-auto bg-gray-800 rounded-xl shadow-md flex items-center space-x-4">
         <div>
             <div class="text-xl font-medium text-white">Losowanie odcinków</div>
@@ -144,6 +88,7 @@
         </div>
         <div>
             <input id="search" class="mt-1 block w-full py-2 px-3 border border-gray-700 bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" type="text" placeholder="Szukaj...">
+            <p id="emptySearch" class="hidden mt-2 text-sm text-red-600 dark:text-red-500">Musisz wpisać tytuł odcinka!</p>
             <button onclick="searchEpisode()" class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Szukaj
             </button>
@@ -164,56 +109,7 @@
             Pełna lista odcinków
         </a>
     </footer>
-    <div id="supportModal" class="animated-modal">
-        <div class="text-4xl mb-4">😊</div>
-        <h2 class="text-xl font-semibold mb-2">Wsparcie projektu</h2>
-        <p>Jeśli spodobał ci się nasz projekt to prosimy o wsparcie, dla wspierających mamy dostęp do reszty polskich popularnych seriali za darmo. Dostęp już od 20 zł, pełna lista seriali po kliknięciu przycisku :)</p>        <a href="support.html">
-            <button class="mt-4 mr-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white btn-yes hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Tak, chcę wesprzeć
-            </button>
-        </a>
-        <button onclick="closeSupportModal()" class="mt-4 ml-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white btn-no hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-            Nie, dzięki
-        </button>
-    </div>
-    <div id="announcement">
-        <span style="font-weight: bold;">UWAGA:</span> Za <span id="countdown"></span> dni strona zostanie przeniesiona na nowy serwer! <a href="https://kiepski-kanal-0cb321edf2c1.herokuapp.com/" style="color: #ffffff; text-decoration: underline;">Kliknij tutaj</a>, aby już teraz zobaczyć nową wersję strony. W nowej wersji strony czekają na państwa nowe funcjonalności jak i nowe seriale za darmo! :)
-    </div>
     <script src="data.js"></script>
-    <script>
-        function showSupportModal() {
-            const modal = document.getElementById('supportModal');
-            modal.style.display = 'block';
-        }
-
-        function closeSupportModal() {
-            const modal = document.getElementById('supportModal');
-            modal.style.display = 'none';
-        }
-
-        window.onload = showSupportModal;
-
-        setInterval(showSupportModal, 10000);
-    </script>
-    <script>
-
-        const movingDate = new Date();
-        movingDate.setDate(movingDate.getDate() + 7); 
-
-        function updateCountdown() {
-            const now = new Date();
-            const difference = movingDate - now;
-
-            const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
-
-            document.getElementById('countdown').innerText = days;
-        }
-
-        setInterval(updateCountdown, 1000);
-
-        window.onload = function() {
-            updateCountdown();
-        };
-    </script>
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="kiepskaStrona" data-description="Support me on Buy me a coffee!" data-message="panie postaw pan piwo" data-color="#5F7FFF" data-position="Right" data-x_margin="12" data-y_margin="12"></script>
 </body>
 </html>
